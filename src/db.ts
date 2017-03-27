@@ -1,6 +1,6 @@
-import * as db from 'sqlite';
 import * as P from 'bluebird';
 import * as R from 'ramda';
+import * as db from 'sqlite';
 
 import { VehicleLocation } from './muni';
 
@@ -41,7 +41,7 @@ export const insertVehicleLocations = async (
   locs: Array<VehicleLocation>,
 ): Promise<void> => {
   await db.run('begin transaction');
-  for (let loc of locs) {
+  for (const loc of locs) {
     await insertVehicleLocation(db, loc);
   }
   await db.run('commit');

@@ -8,9 +8,10 @@ import * as muni from './muni';
 
 const ROUTE_TAG_WHITELIST = [
   'J',
-  'N',
+  'K',
+  'L',
   'M',
-  //'K',
+  'N',
 ];
 
 const BASE_WAIT_SECS = 60;
@@ -67,9 +68,33 @@ const runRoutePoller = R.curry(async (
   }
 });
 
+const runOnce = R.curry(async (
+  pollBaseWait: number,
+  pollWaitSpread: number,
+  interval: number,
+  routeTag: string,
+): Promise<Array<muni.VehicleLocation>> => {
+  try {
+    const lastTime = moment().subtract(interval * 1.1, 'seconds').valueOf();
+    const { locations } = await muni.getVehicleLocations(routeTag,
+                                                                   lastTime);
+    const ids = locations.map((l) => l.id);
+    console.log(
+      `${routeTag}: got ${locations.length} vehicles: ${ids.join(', ')}`);
+    return locations;
+  } catch (e) {
+    console.warn(`${routeTag}: ${e.message}`);
+    return [];
+  }
+});
+
 (async () => {
-  const conn = await db.openDB('data.db');
-  await P.map(ROUTE_TAG_WHITELIST, runRoutePoller(conn,
-                                                  BASE_WAIT_SECS,
-                                                  SPREAD_SECS));
+  const DB_PATH = process.env.DB_PATH;
+  const conn = await db.openDB(DB_PATH);
+  const allLocations =
+    R.unnest(await P.map(ROUTE_TAG_WHITELIST, (routeTag) =>
+      runOnce(BASE_WAIT_SECS, SPREAD_SECS, 60, routeTag)));
+  const pulledTags = R.uniq(allLocations.map(l => l.routeTag));
+  console.log(`saving ${allLocations.length} locations for ${pulledTags.join(', ')}`);
+  await db.insertVehicleLocations(conn, allLocations);
 })();
