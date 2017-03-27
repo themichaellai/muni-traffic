@@ -11,7 +11,7 @@ interface RouteListResponse {
   route: Array<Route>;
 };
 
-interface VehicleLocation {
+export interface VehicleLocation {
   id: string;
   lon: number;
   routeTag: string;
