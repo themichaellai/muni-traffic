@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "lib": ["es6"],
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "rootDir": "src",
+    "outDir": "build",
+    "target": "es6"
+  },
+  "filesGlob": [
+    "src/**/*.ts",
+    "src/**/*.tsc"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
