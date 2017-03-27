@@ -1,5 +1,6 @@
 create table vehicle_locations (
   id integer primary key,
+  time integer,
   vehicleId string,
   lon string,
   routeTag string,

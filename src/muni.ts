@@ -50,12 +50,12 @@ const parseRawVehicleLocation = (
   raw: RawVehicleLocation,
 ): VehicleLocation => ({
   id: raw.id,
-  lon: parseInt(raw.lon, 10),
+  lon: parseFloat(raw.lon),
   routeTag: raw.routeTag,
   predictable: raw.lon === 'true',
   speedKmHr: parseInt(raw.speedKmHr, 10),
   heading: parseInt(raw.heading, 10),
-  lat: parseInt(raw.lat, 10),
+  lat: parseFloat(raw.lat),
   secsSinceReport: parseInt(raw.secsSinceReport, 10),
 });
 

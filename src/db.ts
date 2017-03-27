@@ -10,6 +10,7 @@ const insertVehicleLocation = async (
 ): Promise<void> => {
   const cols = [
     'vehicleId',
+    'time',
     'lon',
     'routeTag',
     'predictable',
@@ -23,6 +24,7 @@ const insertVehicleLocation = async (
     `INSERT INTO vehicle_locations (${cols.join(',')}) VALUES (${placeholders})`,
     [
       loc.id,
+      Math.floor(Date.now() / 1000),
       loc.lon.toString(),
       loc.routeTag,
       loc.predictable,
